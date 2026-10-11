@@ -17,6 +17,38 @@ def get_user_decision():
     return answer
 
 
+def build_draft(user_text):
+    parsed = parse_intent(user_text)
+
+    if parsed is None:
+        return {"status": "error", "message": "Sorry, something went wrong understanding that request."}
+
+    if parsed["needs_clarification"]:
+        return {"status": "clarification", "message": parsed["clarification_question"]}
+
+    contact_result = resolve_contact(parsed["recipient_raw"])
+
+    if contact_result["status"] == "not_found":
+        return {"status": "error", "message": contact_result["message"]}
+
+    if contact_result["status"] == "ambiguous":
+        return {"status": "error", "message": contact_result["message"]}
+
+    return {"status": "ready", "parsed": parsed, "contact": contact_result}
+
+
+def send_draft(parsed, contact_result):
+    try:
+        result = send_email(
+            to=contact_result["email"],
+            subject=parsed["subject"],
+            body=parsed["body"]
+        )
+        return {"status": "sent", "message_id": result["id"]}
+    except Exception as error:
+        return {"status": "error", "message": get_error_message(error)}
+
+
 def run_flow(user_text):
     try:
         parsed = parse_intent(user_text)

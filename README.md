@@ -33,6 +33,10 @@ Run: python main.py
 
 Speak your command when prompted. Review the generated draft, then type yes to send, no or cancel to discard, or describe a change to regenerate the draft before confirming again. The first run will open a browser window to authorize Gmail access.
 
+## Demo video
+
+Full walkthrough of AURA, including the ESP32 hardware flow (button press, OLED status, LEDs) and a real email sent via voice command: [Watch on Google Drive](https://drive.google.com/file/d/1v9jD02TIXfys83RtU6VuQTymNdIU7Pmu/view?usp=sharing)
+
 ## Known limitations
 
 ## Known limitations

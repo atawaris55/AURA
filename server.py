@@ -7,13 +7,19 @@ from brain.email_flow import build_draft, send_draft
 app = Flask(__name__)
 
 
-@app.route("/trigger", methods=["GET"])
-def trigger():
-    print("Received trigger from ESP32")
-    state.status_message = "Listening..."
+@app.route("/record", methods=["GET"])
+def record():
+    print("Recording started")
+    state.status_message = "listening"
+    state.pending_audio = record_audio(duration=8)
+    return "recorded"
 
-    audio_file = record_audio(duration=8)
-    text = transcribe(audio_file)
+
+@app.route("/process", methods=["GET"])
+def process():
+    print("Processing started")
+    state.status_message = "processing"
+    text = transcribe(state.pending_audio)
     print("Transcript:", text)
 
     if not text.strip():
